@@ -1,0 +1,40 @@
+{"id": "q01", "question": "How long does the City Palace visit take?", "lang": "en", "expected": ["trip-udaipur"], "answerable": true}
+{"id": "q02", "question": "How do I make good tea?", "lang": "en", "expected": ["recipe-chai"], "answerable": true}
+{"id": "q03", "question": "Chai kaise banate hain?", "lang": "hi", "expected": ["recipe-chai"], "answerable": true}
+{"id": "q04", "question": "Which ice cream flavours are best?", "lang": "en", "expected": ["icecream-pasteur"], "answerable": true}
+{"id": "q05", "question": "Kitna protein khana chahiye?", "lang": "hi", "expected": ["diet-notes"], "answerable": true}
+{"id": "q06", "question": "How do I use virtual environments?", "lang": "en", "expected": ["python-tips"], "answerable": true}
+{"id": "q07", "question": "Which day is leg day at the gym?", "lang": "en", "expected": ["gym-plan"], "answerable": true}
+{"id": "q08", "question": "What documents do I need for my passport renewal?", "lang": "en", "expected": ["passport-renewal"], "answerable": true}
+{"id": "q09", "question": "Mummy ki birthday pe kya gift dena hai?", "lang": "hi", "expected": ["mom-birthday"], "answerable": true}
+{"id": "q10", "question": "When is my bike service due?", "lang": "en", "expected": ["car-service"], "answerable": true}
+{"id": "q11", "question": "Which biryani place near FC Road should I try?", "lang": "en", "expected": ["biryani-hyderabad-house"], "answerable": true}
+{"id": "q12", "question": "What should I carry for Manali in winter?", "lang": "en", "expected": ["trip-manali"], "answerable": true}
+{"id": "q13", "question": "Deep work ke liye kitne ghante ka block rakhna hai?", "lang": "hi", "expected": ["book-deep-work"], "answerable": true}
+{"id": "q14", "question": "How many hours should I fast before the blood test?", "lang": "en", "expected": ["doctor-checkup"], "answerable": true}
+{"id": "q15", "question": "Why do I end up skipping the gym?", "lang": "en", "expected": ["sleep-notes"], "answerable": true}
+{"id": "q16", "question": "When is the Pune half marathon?", "lang": "en", "expected": ["running-goal"], "answerable": true}
+{"id": "q17", "question": "Wifi slow ho gaya hai, kya karun?", "lang": "hi", "expected": ["wifi-and-router"], "answerable": true}
+{"id": "q18", "question": "When is the rent due and how much is it?", "lang": "en", "expected": ["rent-and-bills"], "answerable": true}
+{"id": "q19", "question": "Where can I get strong filter coffee for breakfast?", "lang": "en", "expected": ["filter-coffee-vaishali"], "answerable": true}
+{"id": "q20", "question": "How do I make dal tadka?", "lang": "en", "expected": ["recipe-dal-tadka"], "answerable": true}
+{"id": "q21", "question": "Back pain ke liye kya stretching karun?", "lang": "hi", "expected": ["stretching-routine"], "answerable": true}
+{"id": "q22", "question": "Who won the cricket world cup?", "lang": "en", "expected": [], "answerable": false,"kind": "off_topic"}
+{"id": "q23", "question": "What is my iron level?", "lang": "en", "expected": [], "answerable": false,"kind": "related_absent"}
+{"id": "q24", "question": "Mera Netflix password kya hai?", "lang": "hi", "expected": [], "answerable": false,"kind": "related_absent"}
+{"id": "q25", "question": "What is the capital of Australia?", "lang": "en", "expected": [], "answerable": false,"kind": "off_topic"}
+{"id": "q26", "question": "Warm milky drink with spices, how do I prepare it?", "lang": "en", "expected": ["recipe-chai"], "answerable": true}
+{"id": "q27", "question": "Where can I get a dessert after a late film?", "lang": "en", "expected": ["icecream-pasteur"], "answerable": true}
+{"id": "q28", "question": "Where should I take my folks for an all-you-can-eat traditional lunch?", "lang": "en", "expected": ["thali-shreyas"], "answerable": true}
+{"id": "q29", "question": "Where can I snack in the evening with a friend who cannot handle spicy food?", "lang": "en", "expected": ["chaat-elco"], "answerable": true}
+{"id": "q30", "question": "Raat ko jaldi sone ke liye kya karna chahiye?", "lang": "hi", "expected": ["sleep-notes"], "answerable": true}
+{"id": "q31", "question": "Mummy ko surprise dene ke liye kya plan hai?", "lang": "hi", "expected": ["mom-birthday"], "answerable": true}
+{"id": "q32", "question": "Din bhar mein kitna paani peena chahiye?", "lang": "hi", "expected": ["diet-notes"], "answerable": true}
+{"id": "q33", "question": "Where can I take mom and dad out?", "lang": "en", "expected": ["thali-shreyas", "trip-udaipur"], "answerable": true}
+{"id": "q34", "question": "What stretching should I do after running?", "lang": "en", "expected": ["running-goal", "stretching-routine"], "answerable": true}
+{"id": "q35", "question": "rent kab?", "lang": "hi", "expected": ["rent-and-bills"], "answerable": true}
+{"id": "q36", "question": "dad ka gift", "lang": "hi", "expected": ["gift-ideas"], "answerable": true}
+{"id": "q37", "question": "How much does a hotel in Goa cost per night?", "lang": "en", "expected": [], "answerable": false,"kind": "related_absent"}
+{"id": "q38", "question": "What time does Hyderabad House open?", "lang": "en", "expected": [], "answerable": false}
+{"id": "q39", "question": "What is the speed of my wifi plan?", "lang": "en", "expected": [], "answerable": false,"kind": "related_absent"}
+{"id": "q40", "question": "Which place closes at 1 pm?", "lang": "en", "expected": ["misal-bedekar"], "answerable": true}

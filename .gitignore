@@ -1,0 +1,25 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+.env
+.vscode
+.logfire
+.pytest_cache
+.dockerignore
+create_issues.ps1
+issues_created.csv
+tricky_out.txtstt-bench/
+*.tgz
+
+
+
+stt-bench/
+*.tgz
+*.onnx
