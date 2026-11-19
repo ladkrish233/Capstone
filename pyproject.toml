@@ -52,6 +52,7 @@ package = false
 members = [
     "services/embed",
 ]
+exclude = ["services/tts"]
 
 [tool.ruff.lint]
 ignore = ["BLE001", "PLW1510", "DTZ002"]
