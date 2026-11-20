@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-SECONDS = 4
+SECONDS = 20
 RATE = 16000
 
 print(f"Speak now for {SECONDS} seconds...")

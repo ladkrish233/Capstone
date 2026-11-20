@@ -1,7 +1,5 @@
 import logging
-
 from fastapi import FastAPI, Header, HTTPException
-
 from app.agent import agent
 from app.db import (
     add_checkin,
@@ -14,11 +12,16 @@ from app.db import (
 from app.models import ChatRequest, ChatResponse, CheckIn, Reminder
 from app.security import check_key
 from app.voice import router as voice_router
+from app.chat import router as chat_router
+from app.warmup import router as warmup_router
 
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
 app.include_router(voice_router)
+app.include_router(chat_router)
+app.include_router(warmup_router)
+
 
 @app.get("/health")
 def health():
@@ -65,16 +68,4 @@ def delete_reminders(reminder_id: int,x_api_key: str | None = Header(default=Non
         raise HTTPException(status_code=404, detail="Reminder not found")
     return deleted
 
-@app.post("/chat",response_model=ChatResponse)
-async def chat(req:ChatRequest,x_api_key: str | None = Header(default=None)):
-    check_key(x_api_key,"API_KEY")
-    try:
-        result=await agent.run(req.message)
-    except Exception :
-        logger.exception("agent failed")
-        raise HTTPException(status_code=502,detail="agent unavailabe")
-    return ChatResponse(answer=result.output)
 
-@app.post("/voice")
-def voice(x_api_key: str | None = Header(default=None)):
-    check_key(x_api_key,"API_KEY")
