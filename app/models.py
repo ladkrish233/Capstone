@@ -28,18 +28,9 @@ class CheckIn(BaseModel):
             raise ValueError(f"kind must be one of {sorted(allowed)}")
         return value
 
+class ChatRequest(BaseModel):
+    message:str = Field(min_length=1,max_length=1000)
+    session_id:str="main"
 
-if __name__ == "__main__":
-    meeting = Reminder(
-        title="Team meeting", due_at="2026-11-07T16:00:00", lead_minutes=10
-    )
-    print("Reminder:", meeting)
-    print("Call me at:", meeting.notify_at)
-
-    lunch = CheckIn(kind="meal", note="poha and chai")
-    print("Check-in:", lunch.model_dump_json())
-
-    try:
-        CheckIn(kind="dance", note="oops")
-    except Exception as error:
-        print("Caught bad data:", error.errors()[0]["msg"])
+class ChatResponse(BaseModel):
+    answer:str

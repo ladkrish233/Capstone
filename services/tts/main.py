@@ -19,13 +19,12 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 import onnxruntime as ort
+from chunker import chunk_text
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.responses import Response, StreamingResponse
 from piper import PiperVoice
 from piper.config import PiperConfig, SynthesisConfig
 from pydantic import BaseModel
-
-from chunker import chunk_text
 from translit import to_devanagari
 
 TTS_KEY = os.environ["TTS_KEY"]  # KeyError at startup if missing
@@ -106,6 +105,36 @@ class PcmCache:
 cache = PcmCache(CACHE_MAX_BYTES)
 
 
+MODEL_URL = (
+    "https://huggingface.co/rhasspy/piper-voices/resolve/main/hi/hi_IN/rohan/medium/"
+    "hi_IN-rohan-medium.onnx"
+)
+
+
+def ensure_model() -> tuple[Path, Path]:
+    """Use the bundled model + config if present; otherwise download once into a temp dir."""
+    bundled = VOICE_DIR / f"{VOICE_NAME}.model"
+    bundled_cfg = VOICE_DIR / f"{VOICE_NAME}.json"
+    if bundled.exists() and bundled_cfg.exists():
+        state["model_source"] = "bundled"
+        return bundled, bundled_cfg
+    import tempfile
+    import urllib.request
+
+    tmpdir = Path(tempfile.gettempdir())
+    dest = tmpdir / f"{VOICE_NAME}.model"
+    dest_cfg = tmpdir / f"{VOICE_NAME}.json"
+    t0 = time.perf_counter()
+    for path, url in ((dest, MODEL_URL), (dest_cfg, MODEL_URL + ".json")):
+        if not path.exists():
+            part = path.with_suffix(path.suffix + ".part")
+            urllib.request.urlretrieve(url, part)
+            part.replace(path)
+            state["download_s"] = time.perf_counter() - t0
+    state["model_source"] = "downloaded"
+    return dest, dest_cfg
+
+
 def load_voice() -> PiperVoice:
     so = ort.SessionOptions()
     so.intra_op_num_threads = 1
@@ -113,10 +142,8 @@ def load_voice() -> PiperVoice:
     so.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
     so.enable_cpu_mem_arena = False  # return memory to the OS between pieces
     so.enable_mem_pattern = False
-    model = VOICE_DIR / f"{VOICE_NAME}.model"  # ONNX file; renamed so *.onnx ignore rules do not drop it
-    cfg = PiperConfig.from_dict(
-        json.loads((VOICE_DIR / f"{VOICE_NAME}.json").read_text("utf-8"))
-    )
+    model, cfg_path = ensure_model()
+    cfg = PiperConfig.from_dict(json.loads(cfg_path.read_text("utf-8")))
     sess = ort.InferenceSession(str(model), sess_options=so, providers=["CPUExecutionProvider"])
     return PiperVoice(session=sess, config=cfg)
 
@@ -270,6 +297,8 @@ def get_stats(x_tts_key: str = Header(default="")):
         "last_synth": stats["last"],
         "cache": {"bytes": cache.size, "entries": len(cache.d), "hits": cache.hits, "misses": cache.misses},
         "python": sys.version.split()[0],
+        "model_source": state.get("model_source"),
+        "download_s": state.get("download_s"),
         "load_s": state.get("load_s"),
         "warmup_s": state.get("warmup_s"),
     }
