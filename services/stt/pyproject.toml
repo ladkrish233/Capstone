@@ -1,0 +1,14 @@
+[project]
+name = "stt"
+version = "0.1.0"
+description = "Vosk speech-to-text service (Hindi / Indian English)"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "fastapi[standard]>=0.162.0",
+    "vosk>=0.3.45",
+]
+
+# Make this folder its own workspace root so it deploys standalone,
+# independent of the repo-level uv workspace.
+[tool.uv.workspace]
+members = []

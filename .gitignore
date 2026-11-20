@@ -23,3 +23,17 @@ tricky_out.txtstt-bench/
 stt-bench/
 *.tgz
 *.onnx
+apply_sql.py
+.stt.key
+*.tgz
+
+# Voice test audio
+/sent.wav
+/reply.wav
+/out.wav
+/new.wav
+/out.pcm
+
+# Model weights (download separately)
+services/embed/models/
+services/stt/models/
