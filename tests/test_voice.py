@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-SECONDS = 4
+SECONDS = 10
 RATE = 16000
 
 print(f"Speak now for {SECONDS} seconds...")
@@ -26,7 +26,8 @@ with wave.open(buf, "wb") as w:
 open("sent.wav", "wb").write(buf.getvalue())
 print("peak level:", max(abs(x) for x in array.array("h", pcm)))
 
-r = httpx.post("http://localhost:8000/voice", content=buf.getvalue(),
+url = os.environ.get("API_URL", "http://localhost:8000") + "/voice"
+r = httpx.post(url, content=buf.getvalue(),
                headers={"X-Api-Key": os.environ["API_KEY"]}, timeout=90)
 print(r.status_code, {k: v for k, v in r.headers.items() if k.startswith("x-time")})
 if r.status_code == 200:
