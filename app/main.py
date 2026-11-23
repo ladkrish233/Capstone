@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app:FastAPI):
+    setup_telementry()  # before Brain so agents are instrumented
     app.state.pool=await make_pool()
     app.state.brain=Brain(app.state.pool)
     yield
@@ -21,14 +22,16 @@ async def lifespan(app:FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+app.include_router(warmup_router)
 app.include_router(voice_router)
 app.include_router(chat_router)
 app.include_router(reminder_router)
-app.include_router(warmup_router)
-app.mount("/",StaticFiles(directory="static",html=True),name="static")
 
 
 @app.get("/health")
 def health():
     return {"status": "ok"}
 
+
+# Must be last: a mount at "/" matches every path registered after it.
+app.mount("/",StaticFiles(directory="static",html=True),name="static")
