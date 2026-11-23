@@ -1,9 +1,11 @@
 import asyncio
+
 from dotenv import load_dotenv
 
 load_dotenv()
 
 from app.pool import make_pool
+
 
 async def main():
     pool=await make_pool()

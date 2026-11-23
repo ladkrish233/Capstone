@@ -1,5 +1,7 @@
 import time
+
 from dotenv import load_dotenv
+
 load_dotenv()
 from rag.remote_embed import RemoteEmbeddings
 from rag.store import search

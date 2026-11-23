@@ -5,6 +5,7 @@ import os
 for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
     os.environ[_v] = "1"
 
+import contextlib
 import gc
 import hashlib
 import hmac
@@ -57,10 +58,8 @@ except Exception:
 def trim_memory():
     gc.collect()
     if _libc is not None:
-        try:
+        with contextlib.suppress(Exception):
             _libc.malloc_trim(0)
-        except Exception:
-            pass
 
 
 state: dict = {}

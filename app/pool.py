@@ -1,5 +1,6 @@
-import os 
-from urllib.parse import parse_qsl,urlencode,urlsplit,urlunsplit
+import os
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+
 import asyncpg
 
 _PSYCOPG_ONLY = {"channel_binding", "options"}

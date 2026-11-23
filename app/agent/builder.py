@@ -1,16 +1,18 @@
-import os 
-import logfire
+import os
 from pathlib import Path
+
+import logfire
 from dotenv import load_dotenv
 from pydantic_ai import Agent
+
 from app.agent.tools import (
-    get_time,
-    current_time_line,
     add_checkin,
     add_reminder,
+    current_time_line,
+    get_time,
     list_checkins,
     list_reminders,
-    search_knowledge
+    search_knowledge,
 )
 
 load_dotenv()

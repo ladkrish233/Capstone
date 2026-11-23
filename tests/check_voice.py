@@ -23,7 +23,8 @@ with wave.open(buf, "wb") as w:
     w.setnchannels(1); w.setsampwidth(2); w.setframerate(RATE)
     w.writeframes(pcm)
 
-open("sent.wav", "wb").write(buf.getvalue())
+with open("sent.wav", "wb") as f:
+    f.write(buf.getvalue())
 print("peak level:", max(abs(x) for x in array.array("h", pcm)))
 
 url = os.environ.get("API_URL", "http://localhost:8000") + "/voice"
@@ -31,7 +32,8 @@ r = httpx.post(url, content=buf.getvalue(),
                headers={"X-Api-Key": os.environ["API_KEY"]}, timeout=90)
 print(r.status_code, {k: v for k, v in r.headers.items() if k.startswith("x-time")})
 if r.status_code == 200:
-    open("reply.wav", "wb").write(r.content)
+    with open("reply.wav", "wb") as f:
+        f.write(r.content)
     print("saved reply.wav, playing...")
     os.startfile("reply.wav")
 else:

@@ -34,11 +34,19 @@ jobs:
       - name: Lint
         run: uv run ruff check .
       - name: Migrate test database
-        run: uv run alembic upgrade head
-        env:
-          DATABASE_URL: ${{ env.TEST_DATABASE_URL }}
+        run: psql "$TEST_DATABASE_URL" -v ON_ERROR_STOP=1 -f db/schema.sql
       - name: Tests (no API keys)
         run: uv run pytest -q
+        env:
+          DATABASE_URL: ${{ env.TEST_DATABASE_URL }}
+          AGENT_MODEL: test
+          # Dummy values: app modules read these at import. No network calls are made.
+          STT_URL: http://localhost:9001
+          TTS_URL: http://localhost:9002
+          EMBED_URL: http://localhost:9003/embed
+          STT_KEY: ci
+          TTS_KEY: ci
+          EMBED_KEY: ci
 
   secret-scan:
     runs-on: ubuntu-latest

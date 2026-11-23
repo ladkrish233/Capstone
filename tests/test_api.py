@@ -1,8 +1,10 @@
+import os
+
 from fastapi.testclient import TestClient
 
 from app.main import app
 
-client = TestClient(app)
+client = TestClient(app, headers={"x-api-key": os.environ["API_KEY"]})
 
 REMINDER = {
     "title": "Team meeting",

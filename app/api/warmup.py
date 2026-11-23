@@ -1,11 +1,13 @@
+import asyncio
+import logging
 import os
 import time
-import asyncio
+
 import httpx
-import logging
-from fastapi import APIRouter,Header,HTTPException
-from app.security import check_key
+from fastapi import APIRouter, Header, HTTPException
+
 from app.db import get_db_health
+from app.security import check_key
 
 logger=logging.getLogger(__name__)
 router=APIRouter()
@@ -27,7 +29,7 @@ async def ping_db():
     try:
         await asyncio.to_thread(get_db_health)
         return ("db",True)
-    except :
+    except Exception:
         logger.exception("warmup db failed")
         return("db",False)
 

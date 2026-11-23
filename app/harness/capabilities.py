@@ -1,5 +1,6 @@
 from pydantic_ai_harness.step_persistence import StepPersistence
-from pydantic_ai_harness.tool_output_limits import Band,ToolOutputLimits,Truncate
+from pydantic_ai_harness.tool_output_limits import Band, ToolOutputLimits, Truncate
+
 
 def build_capabilities(store):
     return [

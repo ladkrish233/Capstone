@@ -1,11 +1,11 @@
-from fastapi import HTTPException,Header,APIRouter
+from fastapi import APIRouter, Header, HTTPException
+
+from app.models import CheckIn, Reminder
 from app.security import check_key
-from app.models import Reminder,CheckIn
-from app.db import (
+from app.tracker import (
     add_checkin,
     add_reminder,
     delete_reminder,
-    get_db_health,
     list_checkins,
     list_reminders,
 )
