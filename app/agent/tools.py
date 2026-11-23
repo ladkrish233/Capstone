@@ -1,15 +1,11 @@
 import os
-from datetime import datetime
-from pathlib import Path
-from zoneinfo import ZoneInfo
-
-import logfire
 import psycopg
+
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from dotenv import load_dotenv
 from psycopg.rows import dict_row
-from pydantic_ai import Agent, ModelRetry
-from pydantic_ai.messages import ModelResponse, ToolCallPart
-
+from pydantic_ai import ModelRetry
 from app.models import CheckIn, Reminder
 from rag.knowledge import search_notes
 
@@ -17,21 +13,8 @@ load_dotenv()
 
 TZ = ZoneInfo("Asia/Kolkata")
 URL = os.environ["DATABASE_URL"]
-MODEL = os.environ["AGENT_MODEL"]  # for example "openrouter:<provider>/<model>" (must support tool calling)
-
-prompt_path = Path(__file__).parent.parent / "prompts" / "friend_v4.md"
-BASE_INSTRUCTIONS = prompt_path.read_text(encoding="utf-8").replace(
-    "{today}", "shown in the Current time line"
-)
 
 
-logfire.configure(send_to_logfire="if-token-present")
-logfire.instrument_pydantic_ai()
-
-agent = Agent(MODEL, instructions=[BASE_INSTRUCTIONS])
-
-
-@agent.instructions
 def current_time_line() -> str:
     now = datetime.now(TZ)
     return f"Current time: {now:%A, %d %B %Y, %H:%M} IST."
@@ -47,13 +30,11 @@ def _local(dt: datetime) -> datetime:
     return dt.astimezone(TZ)
 
 
-@agent.tool_plain
 def get_time() -> str:
     """Return the current time in India as HH:MM."""
     return datetime.now(TZ).strftime("%H:%M")
 
 
-@agent.tool_plain
 def list_reminders() -> str:
     """List the user's saved reminders. Use this when the user asks what reminders
     they have, what is coming up, or whether anything is scheduled."""
@@ -74,7 +55,6 @@ def list_reminders() -> str:
     )
 
 
-@agent.tool_plain
 def add_reminder(reminder: Reminder) -> str:
     """Save a reminder. Use this when the user asks to be reminded of something.
     due_at is the time to remind them, and lead_minutes is how many minutes
@@ -94,7 +74,6 @@ def add_reminder(reminder: Reminder) -> str:
     return f"Saved reminder {row['id']}: {reminder.title} at {due:%a %d %b %H:%M} IST."
 
 
-@agent.tool_plain
 def list_checkins() -> str:
     """List the user's most recent check-ins (mood, workouts, habits they logged).
     Use this when the user asks what they logged or how they have been doing."""
@@ -110,7 +89,6 @@ def list_checkins() -> str:
     return "\n".join(f"{r['id']}: {r['kind']} - {r['note']}" for r in rows)
 
 
-@agent.tool_plain
 def add_checkin(checkin: CheckIn) -> str:
     """Log a check-in. Use this when the user says how they feel or reports something
     they did (kind says what type of check-in it is, note is a short description)."""
@@ -125,19 +103,9 @@ def add_checkin(checkin: CheckIn) -> str:
     return f"Logged check-in {row['id']}."
 
 
-@agent.tool_plain
 def search_knowledge(query: str) -> str:
     """Search the user's saved notes, documents and files (recipes, places, travel,
     diet, work notes, tips). Call this FIRST for any question about food, recipes,
     places, health habits, projects or tips, because the user may have saved their
     own version. Do not use for reminders or check-ins."""
     return search_notes(query)
-
-def tool_used(result) -> list[str]:
-    names = []
-    for message in result.all_messages():
-        if isinstance(message, ModelResponse):
-            for part in message.parts:
-                if isinstance(part, ToolCallPart):
-                    names.append(part.tool_name)
-    return names

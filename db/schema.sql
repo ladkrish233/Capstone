@@ -24,10 +24,8 @@ create table if not exists cost_events (
 
 CREATE EXTENSION IF NOT EXISTS vector;
 
-create table if not exists chat_runs (
-    id bigserial primary key,
-    session_id text not null,
-    messages jsonb not null,
+create table if not exists friend_tool_spills (
+    handle text primary key,
+    data bytea not null,
     created_at timestamptz not null default now()
 );
-create index if not exists chat_runs_session_idx on chat_runs (session_id, id desc);

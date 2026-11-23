@@ -6,12 +6,12 @@ import wave
 
 import httpx
 from fastapi import APIRouter, Header, HTTPException, Request, Response
-
-from app.agent import agent
 from app.security import check_key
+from dotenv import load_dotenv
 
 log=logging.getLogger(__name__)
 router=APIRouter()
+load_dotenv()
 
 STT, TTS = os.environ["STT_URL"].rstrip("/"), os.environ["TTS_URL"].rstrip("/")
 STT_KEY, TTS_KEY = os.environ["STT_KEY"], os.environ["TTS_KEY"]
@@ -60,7 +60,7 @@ async def voice(request:Request,x_api_key:str|None = Header(default=None)):
         if not text:
             raise HTTPException(422, "did not hear anything")
         try:
-            answer = (await agent.run(text)).output
+            answer = (await request.app.state.brain.ask(text)).output
         except Exception:
             log.exception("agent failed")
             raise HTTPException(502, "agent unavailable")
