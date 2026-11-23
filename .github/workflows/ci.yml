@@ -47,7 +47,6 @@ jobs:
           STT_KEY: ci
           TTS_KEY: ci
           EMBED_KEY: ci
-          API_KEY: ci
 
   secret-scan:
     runs-on: ubuntu-latest
