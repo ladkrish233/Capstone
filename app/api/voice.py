@@ -5,9 +5,10 @@ import time
 import wave
 
 import httpx
-from fastapi import APIRouter, Header, HTTPException, Request, Response
-from app.security import check_key
 from dotenv import load_dotenv
+from fastapi import APIRouter, Header, HTTPException, Request, Response
+
+from app.security import check_key
 
 log=logging.getLogger(__name__)
 router=APIRouter()

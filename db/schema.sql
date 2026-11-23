@@ -1,7 +1,7 @@
 create table if not exists reminders (
     id serial primary key,
     title text not null,
-    due_at timestamp not null,
+    due_at timestamptz not null,
     lead_minutes integer default 10 not null check (lead_minutes >= 0 and lead_minutes <= 240),
     status text default 'pending' not null check (status in ('pending', 'done', 'missed'))
 );

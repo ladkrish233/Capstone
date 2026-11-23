@@ -1,7 +1,9 @@
-from fastapi import APIRouter,Header,HTTPException,Request
-from app.models import ChatRequest,ChatResponse
-from app.security import check_key
 import logging
+
+from fastapi import APIRouter, Header, HTTPException, Request
+
+from app.models import ChatRequest, ChatResponse
+from app.security import check_key
 
 logger=logging.getLogger(__name__)
 router=APIRouter()

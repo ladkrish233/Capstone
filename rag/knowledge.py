@@ -1,10 +1,13 @@
+import logging
+import time
+
 from rag.store import search
-import logging,time
+
 K = 4  # how many chunks to fetch
 MAX_DISTANCE = 0.80  # worse than this = "not found"
 MAX_CHARS = 600  # per chunk, keeps tokens low
 
-log=logging.log(__name__)
+log=logging.getLogger(__name__)
 
 def search_notes(query: str) -> str:
     t0 = time.perf_counter()

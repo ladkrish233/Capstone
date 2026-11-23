@@ -1,5 +1,7 @@
-from dotenv import load_dotenv
 import asyncio
+
+from dotenv import load_dotenv
+
 from app.harness.brain import Brain
 from app.pool import make_pool
 

@@ -1,14 +1,16 @@
 import logging
-from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from app.api.voice import router as voice_router
+
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+
 from app.api.chat import router as chat_router
 from app.api.reminders import router as reminder_router
+from app.api.voice import router as voice_router
 from app.api.warmup import router as warmup_router
-from app.pool import make_pool
 from app.harness.brain import Brain
-from fastapi.staticfiles import StaticFiles
 from app.harness.telementry import setup_telementry
+from app.pool import make_pool
 
 logger = logging.getLogger(__name__)
 

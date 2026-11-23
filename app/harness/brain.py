@@ -1,11 +1,11 @@
 import asyncio
 
-from pydantic_ai_harness.step_persistence import StepPersistence,PostgresStepStore
+from pydantic_ai_harness.step_persistence import PostgresStepStore
 
 from app.agent import build_agent
-from app.harness.config import MODEL
-from app.harness.sessions import load_history,today_id
 from app.harness.capabilities import build_capabilities
+from app.harness.config import MODEL
+from app.harness.sessions import load_history, today_id
 
 
 class Brain:
