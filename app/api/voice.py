@@ -7,6 +7,7 @@ import wave
 import httpx
 from dotenv import load_dotenv
 from fastapi import APIRouter, Header, HTTPException, Request, Response
+from pydantic_ai.exceptions import UsageLimitExceeded
 
 from app.security import check_key
 
@@ -62,6 +63,8 @@ async def voice(request:Request,x_api_key:str|None = Header(default=None)):
             raise HTTPException(422, "did not hear anything")
         try:
             answer = (await request.app.state.brain.ask(text)).output
+        except UsageLimitExceeded:
+            answer= "I've reached my limit for now. Let's talk again a bit later."
         except Exception:
             log.exception("agent failed")
             raise HTTPException(502, "agent unavailable")

@@ -37,3 +37,6 @@ apply_sql.py
 # Model weights (download separately)
 services/embed/models/
 services/stt/models/
+
+.claude/
+tts-samples/
