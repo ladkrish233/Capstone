@@ -30,9 +30,9 @@ def build_capabilities(store,pool):
         SpendLimits(
             budgets=[
                 Budget(usd=Decimal("1.00"),window="run",name="per_message"),
-                Budget(usd=Decimal("2.00"),window="day",tokens=900_000,warn_at=1.5),
+                Budget(usd=Decimal("2.00"),window="day",tokens=900_000,warn_at=0.8),
 
             ],
-            store  = PostgresSpendStore(pool,table="friend-spend"),
+            store  = PostgresSpendStore(pool,table="friend_spend"),
             )
         ]
