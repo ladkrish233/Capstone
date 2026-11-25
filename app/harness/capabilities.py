@@ -19,31 +19,36 @@ def _memory_caps(store):
     return [
         StepPersistence(store,agent_name="friend"),
         ClampOversizedMessages(max_part_chars=8000),
-        SummarizingCompaction()
+        SummarizingCompaction(max_messages=30,keep_messages=12)
+    ]
+
+def _tool_caps(pool):
+    return [
+        ToolOutputLimits(
+                    bands=[
+                        Band(over=100_000,action=Spill(then=Truncate())),
+                        Band(over=20_000,action=Summarize(then=Truncate())),
+                        Band(over=5000,action=Truncate(max_chars=5_000))
+                        ],
+                        store=PostgresSpillStore(pool)
+                    ),
+    ]
+
+def _safety_caps(pool):
+    return [
+        RepairToolArguments(),
+        DetectLoops(repeated_call_threshold=3),
+                SpendLimits(
+                    budgets=[
+                        Budget(usd=Decimal("1.00"),window="run",name="per_message"),
+                        Budget(usd=Decimal("2.00"),window="day",tokens=900_000,warn_at=0.8),
+        
+                    ],
+                    store  = PostgresSpendStore(pool,table="friend_spend"),
+            ),
     ]
 
 
 
-
 def build_capabilities(store,pool):
-    return [
-        StepPersistence(store,agent_name="friend"),
-        ToolOutputLimits(
-            bands=[
-                Band(over=100_000,action=Spill(then=Truncate())),
-                Band(over=20_000,action=Summarize(then=Truncate())),
-                Band(over=5000,action=Truncate(max_chars=5_000))
-                ],
-                store=PostgresSpillStore(pool)
-            ),
-        RepairToolArguments(),
-        DetectLoops(repeated_call_threshold=3),
-        SpendLimits(
-            budgets=[
-                Budget(usd=Decimal("1.00"),window="run",name="per_message"),
-                Budget(usd=Decimal("2.00"),window="day",tokens=900_000,warn_at=0.8),
-
-            ],
-            store  = PostgresSpendStore(pool,table="friend_spend"),
-            )
-        ]
+    return [*_memory_caps(store),*_safety_caps(pool),*_tool_caps(pool)]
