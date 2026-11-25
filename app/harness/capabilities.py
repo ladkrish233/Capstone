@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from pydantic_ai_harness import DetectLoops
+from pydantic_ai_harness.compaction import ClampOversizedMessages,SummarizingCompaction
 from pydantic_ai_harness.repair_tool_arguments import RepairToolArguments
 from pydantic_ai_harness.spend import PostgresSpendStore,Budget,SpendLimits
 from pydantic_ai_harness.step_persistence import StepPersistence
@@ -12,6 +13,16 @@ from pydantic_ai_harness.tool_output_limits import (
     Spill
 )
 from app.harness.spillstore import PostgresSpillStore
+
+
+def _memory_caps(store):
+    return [
+        StepPersistence(store,agent_name="friend"),
+        ClampOversizedMessages(max_part_chars=8000),
+        SummarizingCompaction()
+    ]
+
+
 
 
 def build_capabilities(store,pool):
