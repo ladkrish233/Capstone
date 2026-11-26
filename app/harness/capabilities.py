@@ -4,6 +4,7 @@ from decimal import Decimal
 
 from pydantic_ai_harness import DetectLoops
 from pydantic_ai_harness.prompt_injection_defender import PromptInjectionDefender
+from pydantic_ai_harness.guardrails import InputGuardrail,OutputGuardrail
 from pydantic_ai_harness.conversation_search import ConversationSearch,SnapshotHistorySource
 from pydantic_ai_harness.compaction import ClampOversizedMessages,SummarizingCompaction
 from pydantic_ai_harness.repair_tool_arguments import RepairToolArguments
@@ -16,6 +17,8 @@ from pydantic_ai_harness.tool_output_limits import (
     Summarize,
     Spill
 )
+
+from app.harness.guards import REDACT
 from app.harness.spillstore import PostgresSpillStore
 
 log=logging.getLogger(__name__)
@@ -45,6 +48,8 @@ def _tool_caps(pool):
 
 def _safety_caps(pool):
     return [
+        InputGuardrail(guard=REDACT),
+        OutputGuardrail(guard=REDACT),
         PromptInjectionDefender(block_high_risk=True,on_detection=_on_injection),
         RepairToolArguments(),
         DetectLoops(repeated_call_threshold=3),
