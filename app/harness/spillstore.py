@@ -16,4 +16,4 @@ class PostgresSpillStore:
         )
         if row is None:
             raise FileNotFoundError(handle)
-        return bytes(row(['data']))
+        return bytes(row['data'])

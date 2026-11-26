@@ -1,4 +1,4 @@
-from app.agent import builder
+from app.api.agent import builder
 
 
 def test_agent_has_no_delete_tool(monkeypatch):

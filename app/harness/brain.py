@@ -3,7 +3,7 @@ import asyncio
 from pydantic_ai_harness.step_persistence import PostgresStepStore
 from pydantic_ai import UsageLimits
 
-from app.agent import build_agent
+from app.api.agent import build_agent
 from app.harness.capabilities import build_capabilities
 from app.harness.config import MODEL
 from app.harness.sessions import load_history, today_id
