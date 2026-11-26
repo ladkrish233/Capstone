@@ -33,7 +33,7 @@ def add_reminder(reminder: Reminder) -> dict:
     with _conn() as conn:
         return conn.execute(
             "insert into reminders (title, due_at, lead_minutes, status) "
-            "values (%s, %s, %s, %s) returning *",
+            "values (%s, %s, %s, %s) ON CONFLICT DO NOTHING returning *",
             (
                 reminder.title,
                 to_ist(reminder.due_at),

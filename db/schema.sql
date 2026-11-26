@@ -29,3 +29,7 @@ create table if not exists friend_tool_spills (
     data bytea not null,
     created_at timestamptz not null default now()
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS reminders_no_dupes
+ON reminders (lower(text), remind_at)
+WHERE sent_at IS NULL;
