@@ -25,7 +25,7 @@ dependencies = [
     "pandas>=3.1.1",
     "psycopg[binary]>=3.3.8",
     "pydantic>=2.14.3",
-    "pydantic-ai-harness[repair-tool-arguments,skills]==0.68.0",
+    "pydantic-ai-harness[prompt-injection-defender,repair-tool-arguments,skills]==0.68.0",
     "pydantic-ai[slim]==2.68.0",
     "pydantic-evals>=2.66.0",
     "pypdf>=7.1.0",

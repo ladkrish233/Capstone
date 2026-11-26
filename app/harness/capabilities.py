@@ -1,6 +1,9 @@
+import logging
+
 from decimal import Decimal
 
 from pydantic_ai_harness import DetectLoops
+from pydantic_ai_harness.prompt_injection_defender import PromptInjectionDefender
 from pydantic_ai_harness.conversation_search import ConversationSearch,SnapshotHistorySource
 from pydantic_ai_harness.compaction import ClampOversizedMessages,SummarizingCompaction
 from pydantic_ai_harness.repair_tool_arguments import RepairToolArguments
@@ -15,6 +18,10 @@ from pydantic_ai_harness.tool_output_limits import (
 )
 from app.harness.spillstore import PostgresSpillStore
 
+log=logging.getLogger(__name__)
+
+def _on_injection(ctx,call,verdict):
+    log.warning("injection blocked in %s (risk=%s)", call.tool_name, verdict.risk_level)
 
 def _memory_caps(store):
     return [
@@ -38,6 +45,7 @@ def _tool_caps(pool):
 
 def _safety_caps(pool):
     return [
+        PromptInjectionDefender(block_high_risk=True,on_detection=_on_injection)
         RepairToolArguments(),
         DetectLoops(repeated_call_threshold=3),
                 SpendLimits(
@@ -53,4 +61,4 @@ def _safety_caps(pool):
 
 
 def build_capabilities(store,pool):
-    return [*_memory_caps(store),*_safety_caps(pool),*_tool_caps(pool)]
+    return [*_memory_caps(store),*_safety_caps(pool),*_tool_caps(pool),]
