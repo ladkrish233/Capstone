@@ -3,7 +3,7 @@ from pathlib import Path
 
 import logfire
 from dotenv import load_dotenv
-from pydantic_ai import Agent
+from pydantic_ai import Agent,Tool
 
 from app.agent.tools import (
     add_checkin,
@@ -26,11 +26,24 @@ BASE_INSTRUCTION=prompt_path.read_text(encoding="utf-8").replace(
 logfire.configure(send_to_logfire="if-token-present")
 logfire.instrument_pydantic_ai()
 
+READ,WRITE="read","write"
+
+TOOL_EFFECTS={
+    get_time:READ,
+    list_checkins:READ,
+    list_reminders:READ,
+    search_knowledge:READ,
+    add_checkin:WRITE,
+    add_reminder:WRITE
+}
+
+def build_tools():
+    return [Tool(fn,metadata={"effect":effect}) for fn,effect in TOOL_EFFECTS.item()]
+
 def build_agent(model : str | None = None,capabilities=None)->Agent:
     return Agent(
         MODEL or model,
         instructions=[BASE_INSTRUCTION,current_time_line],
-        tools=[get_time,add_checkin,add_reminder,
-            list_checkins,list_reminders,search_knowledge],
+        tools=build_tools(),
         capabilities=capabilities or [],
     )
