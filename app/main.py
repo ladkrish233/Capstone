@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
+from app import tracker
 from app.api.chat import router as chat_router
 from app.api.reminders import router as reminder_router
 from app.api.voice import router as voice_router
@@ -18,8 +19,10 @@ logger = logging.getLogger(__name__)
 async def lifespan(app:FastAPI):
     setup_telementry()  # before Brain so agents are instrumented
     app.state.pool=await make_pool()
+    tracker.set_pool(app.state.pool)
     app.state.brain=Brain(app.state.pool)
     yield
+    tracker.set_pool(None)
     await app.state.pool.close()
 
 app = FastAPI(lifespan=lifespan)

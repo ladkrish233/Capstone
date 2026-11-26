@@ -1,6 +1,5 @@
 from datetime import datetime
 
-import psycopg
 from dotenv import load_dotenv
 from pydantic_ai import ModelRetry
 
@@ -22,12 +21,12 @@ def get_time() -> str:
     return datetime.now(TZ).strftime("%H:%M")
 
 
-def list_reminders() -> str:
+async def list_reminders() -> str:
     """List the user's saved reminders. Use this when the user asks what reminders
     they have, what is coming up, or whether anything is scheduled."""
     try:
-        rows = tracker.list_reminders(limit=50)
-    except psycopg.Error:
+        rows = await tracker.list_reminders(limit=50)
+    except tracker.DB_ERRORS:
         return "Could not read reminders right now."
     if not rows:
         return "No reminders saved."
@@ -38,7 +37,7 @@ def list_reminders() -> str:
     )
 
 
-def add_reminder(reminder: Reminder) -> str:
+async def add_reminder(reminder: Reminder) -> str:
     """Save a reminder. Use this when the user asks to be reminded of something.
     due_at is the time to remind them, and lead_minutes is how many minutes
     before that to notify them."""
@@ -46,30 +45,30 @@ def add_reminder(reminder: Reminder) -> str:
     if due < datetime.now(TZ):
         raise ModelRetry("That time is in the past. Use a future date.")
     try:
-        row = tracker.add_reminder(reminder)
-    except psycopg.Error:
+        row = await tracker.add_reminder(reminder)
+    except tracker.DB_ERRORS:
         return "Could not save the reminder right now."
     return f"Saved reminder {row['id']}: {reminder.title} at {due:%a %d %b %H:%M} IST."
 
 
-def list_checkins() -> str:
+async def list_checkins() -> str:
     """List the user's most recent check-ins (mood, workouts, habits they logged).
     Use this when the user asks what they logged or how they have been doing."""
     try:
-        rows = tracker.list_checkins(limit=20)
-    except psycopg.Error:
+        rows = await tracker.list_checkins(limit=20)
+    except tracker.DB_ERRORS:
         return "Could not read check-ins right now."
     if not rows:
         return "No check-ins saved."
     return "\n".join(f"{r['id']}: {r['kind']} - {r['note']}" for r in rows)
 
 
-def add_checkin(checkin: CheckIn) -> str:
+async def add_checkin(checkin: CheckIn) -> str:
     """Log a check-in. Use this when the user says how they feel or reports something
     they did (kind says what type of check-in it is, note is a short description)."""
     try:
-        row = tracker.add_checkin(checkin)
-    except psycopg.Error:
+        row = await tracker.add_checkin(checkin)
+    except tracker.DB_ERRORS:
         return "Could not save the check-in right now."
     return f"Logged check-in {row['id']}."
 

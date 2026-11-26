@@ -38,7 +38,7 @@ TOOL_EFFECTS={
 }
 
 def build_tools():
-    return [Tool(fn,metadata={"effect":effect}) for fn,effect in TOOL_EFFECTS.item()]
+    return [Tool(fn,metadata={"effect":effect}) for fn,effect in TOOL_EFFECTS.items()]
 
 def build_agent(model : str | None = None,capabilities=None)->Agent:
     return Agent(

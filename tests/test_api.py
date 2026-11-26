@@ -1,10 +1,20 @@
 import os
 
+import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
 
 client = TestClient(app, headers={"x-api-key": os.environ["API_KEY"]})
+
+
+
+@pytest.fixture(autouse=True, scope="module")
+def _lifespan():
+    # runs app startup so the shared DB pool exists
+    with client:
+        yield
+
 
 REMINDER = {
     "title": "Team meeting",
