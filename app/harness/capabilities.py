@@ -26,7 +26,7 @@ def _on_injection(ctx,call,verdict):
 def _memory_caps(store):
     return [
         StepPersistence(store,agent_name="friend"),
-        ConversationSearch(SnapshotHistorySource(store),scope="all")
+        ConversationSearch(SnapshotHistorySource(store),scope="all"),
         ClampOversizedMessages(max_part_chars=8000),
         SummarizingCompaction(max_messages=30,keep_messages=12)
     ]
@@ -45,7 +45,7 @@ def _tool_caps(pool):
 
 def _safety_caps(pool):
     return [
-        PromptInjectionDefender(block_high_risk=True,on_detection=_on_injection)
+        PromptInjectionDefender(block_high_risk=True,on_detection=_on_injection),
         RepairToolArguments(),
         DetectLoops(repeated_call_threshold=3),
                 SpendLimits(
